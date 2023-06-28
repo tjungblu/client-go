@@ -69,6 +69,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.BuildOverridesApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("BuildSpec"):
 		return &configv1.BuildSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("CloudControllerManagerStatus"):
+		return &configv1.CloudControllerManagerStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterCondition"):
 		return &configv1.ClusterConditionApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ClusterNetworkEntry"):
@@ -133,6 +135,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.ExternalIPPolicyApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ExternalPlatformSpec"):
 		return &configv1.ExternalPlatformSpecApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ExternalPlatformStatus"):
+		return &configv1.ExternalPlatformStatusApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("FeatureGate"):
 		return &configv1.FeatureGateApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("FeatureGateAttributes"):
@@ -343,12 +347,24 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1.WebhookTokenAuthenticatorApplyConfiguration{}
 
 		// Group=config.openshift.io, Version=v1alpha1
+	case v1alpha1.SchemeGroupVersion.WithKind("Backup"):
+		return &configv1alpha1.BackupApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("BackupSpec"):
+		return &configv1alpha1.BackupSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupSpec"):
+		return &configv1alpha1.EtcdBackupSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("GatherConfig"):
 		return &configv1alpha1.GatherConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("InsightsDataGather"):
 		return &configv1alpha1.InsightsDataGatherApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("InsightsDataGatherSpec"):
 		return &configv1alpha1.InsightsDataGatherSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("RetentionCountConfig"):
+		return &configv1alpha1.RetentionCountConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("RetentionPolicy"):
+		return &configv1alpha1.RetentionPolicyApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("RetentionSizeConfig"):
+		return &configv1alpha1.RetentionSizeConfigApplyConfiguration{}
 
 	}
 	return nil

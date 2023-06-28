@@ -71,6 +71,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.ConsoleSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("ConsoleStatus"):
 		return &operatorv1.ConsoleStatusApplyConfiguration{}
+	case v1.SchemeGroupVersion.WithKind("ContainerLoggingDestinationParameters"):
+		return &operatorv1.ContainerLoggingDestinationParametersApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("CSIDriverConfigSpec"):
 		return &operatorv1.CSIDriverConfigSpecApplyConfiguration{}
 	case v1.SchemeGroupVersion.WithKind("CSISnapshotController"):
@@ -329,6 +331,12 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &operatorv1.VSphereCSIDriverConfigSpecApplyConfiguration{}
 
 		// Group=operator.openshift.io, Version=v1alpha1
+	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackup"):
+		return &operatorv1alpha1.EtcdBackupApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupSpec"):
+		return &operatorv1alpha1.EtcdBackupSpecApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("EtcdBackupStatus"):
+		return &operatorv1alpha1.EtcdBackupStatusApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ImageContentSourcePolicy"):
 		return &operatorv1alpha1.ImageContentSourcePolicyApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ImageContentSourcePolicySpec"):
