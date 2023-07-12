@@ -12,6 +12,8 @@ type Interface interface {
 	EtcdBackups() EtcdBackupInformer
 	// ImageContentSourcePolicies returns a ImageContentSourcePolicyInformer.
 	ImageContentSourcePolicies() ImageContentSourcePolicyInformer
+	// OLMs returns a OLMInformer.
+	OLMs() OLMInformer
 }
 
 type version struct {
@@ -33,4 +35,9 @@ func (v *version) EtcdBackups() EtcdBackupInformer {
 // ImageContentSourcePolicies returns a ImageContentSourcePolicyInformer.
 func (v *version) ImageContentSourcePolicies() ImageContentSourcePolicyInformer {
 	return &imageContentSourcePolicyInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// OLMs returns a OLMInformer.
+func (v *version) OLMs() OLMInformer {
+	return &oLMInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

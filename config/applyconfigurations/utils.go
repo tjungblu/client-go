@@ -359,8 +359,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &configv1alpha1.InsightsDataGatherApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("InsightsDataGatherSpec"):
 		return &configv1alpha1.InsightsDataGatherSpecApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("RetentionCountConfig"):
-		return &configv1alpha1.RetentionCountConfigApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("RetentionNumberConfig"):
+		return &configv1alpha1.RetentionNumberConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("RetentionPolicy"):
 		return &configv1alpha1.RetentionPolicyApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("RetentionSizeConfig"):

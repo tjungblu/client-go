@@ -9,9 +9,9 @@ import (
 // RetentionPolicyApplyConfiguration represents an declarative configuration of the RetentionPolicy type for use
 // with apply.
 type RetentionPolicyApplyConfiguration struct {
-	RetentionType  *v1alpha1.RetentionType                 `json:"retentionType,omitempty"`
-	RetentionCount *RetentionCountConfigApplyConfiguration `json:"retentionCount,omitempty"`
-	RetentionSize  *RetentionSizeConfigApplyConfiguration  `json:"retentionSize,omitempty"`
+	RetentionType   *v1alpha1.RetentionType                  `json:"retentionType,omitempty"`
+	RetentionNumber *RetentionNumberConfigApplyConfiguration `json:"retentionNumber,omitempty"`
+	RetentionSize   *RetentionSizeConfigApplyConfiguration   `json:"retentionSize,omitempty"`
 }
 
 // RetentionPolicyApplyConfiguration constructs an declarative configuration of the RetentionPolicy type for use with
@@ -28,11 +28,11 @@ func (b *RetentionPolicyApplyConfiguration) WithRetentionType(value v1alpha1.Ret
 	return b
 }
 
-// WithRetentionCount sets the RetentionCount field in the declarative configuration to the given value
+// WithRetentionNumber sets the RetentionNumber field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
-// If called multiple times, the RetentionCount field is set to the value of the last call.
-func (b *RetentionPolicyApplyConfiguration) WithRetentionCount(value *RetentionCountConfigApplyConfiguration) *RetentionPolicyApplyConfiguration {
-	b.RetentionCount = value
+// If called multiple times, the RetentionNumber field is set to the value of the last call.
+func (b *RetentionPolicyApplyConfiguration) WithRetentionNumber(value *RetentionNumberConfigApplyConfiguration) *RetentionPolicyApplyConfiguration {
+	b.RetentionNumber = value
 	return b
 }
 

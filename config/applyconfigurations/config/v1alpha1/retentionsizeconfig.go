@@ -5,7 +5,7 @@ package v1alpha1
 // RetentionSizeConfigApplyConfiguration represents an declarative configuration of the RetentionSizeConfig type for use
 // with apply.
 type RetentionSizeConfigApplyConfiguration struct {
-	MaxSizeOfBackupsMb *int `json:"maxSizeOfBackupsMb,omitempty"`
+	MaxSizeOfBackupsGb *int `json:"maxSizeOfBackupsGb,omitempty"`
 }
 
 // RetentionSizeConfigApplyConfiguration constructs an declarative configuration of the RetentionSizeConfig type for use with
@@ -14,10 +14,10 @@ func RetentionSizeConfig() *RetentionSizeConfigApplyConfiguration {
 	return &RetentionSizeConfigApplyConfiguration{}
 }
 
-// WithMaxSizeOfBackupsMb sets the MaxSizeOfBackupsMb field in the declarative configuration to the given value
+// WithMaxSizeOfBackupsGb sets the MaxSizeOfBackupsGb field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
-// If called multiple times, the MaxSizeOfBackupsMb field is set to the value of the last call.
-func (b *RetentionSizeConfigApplyConfiguration) WithMaxSizeOfBackupsMb(value int) *RetentionSizeConfigApplyConfiguration {
-	b.MaxSizeOfBackupsMb = &value
+// If called multiple times, the MaxSizeOfBackupsGb field is set to the value of the last call.
+func (b *RetentionSizeConfigApplyConfiguration) WithMaxSizeOfBackupsGb(value int) *RetentionSizeConfigApplyConfiguration {
+	b.MaxSizeOfBackupsGb = &value
 	return b
 }

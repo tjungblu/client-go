@@ -5,3 +5,5 @@ package v1alpha1
 type EtcdBackupExpansion interface{}
 
 type ImageContentSourcePolicyExpansion interface{}
+
+type OLMExpansion interface{}

@@ -3,17 +3,14 @@
 package v1alpha1
 
 import (
-	v1alpha1 "github.com/openshift/api/operator/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // EtcdBackupStatusApplyConfiguration represents an declarative configuration of the EtcdBackupStatus type for use
 // with apply.
 type EtcdBackupStatusApplyConfiguration struct {
-	Conditions []v1.Condition            `json:"conditions,omitempty"`
-	State      *v1alpha1.EtcdBackupState `json:"etcdBackupState,omitempty"`
-	StartTime  *v1.Time                  `json:"startTime,omitempty"`
-	FinishTime *v1.Time                  `json:"finishTime,omitempty"`
+	Conditions []v1.Condition                        `json:"conditions,omitempty"`
+	BackupJob  *BackupJobReferenceApplyConfiguration `json:"backupJob,omitempty"`
 }
 
 // EtcdBackupStatusApplyConfiguration constructs an declarative configuration of the EtcdBackupStatus type for use with
@@ -32,26 +29,10 @@ func (b *EtcdBackupStatusApplyConfiguration) WithConditions(values ...v1.Conditi
 	return b
 }
 
-// WithState sets the State field in the declarative configuration to the given value
+// WithBackupJob sets the BackupJob field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
-// If called multiple times, the State field is set to the value of the last call.
-func (b *EtcdBackupStatusApplyConfiguration) WithState(value v1alpha1.EtcdBackupState) *EtcdBackupStatusApplyConfiguration {
-	b.State = &value
-	return b
-}
-
-// WithStartTime sets the StartTime field in the declarative configuration to the given value
-// and returns the receiver, so that objects can be built by chaining "With" function invocations.
-// If called multiple times, the StartTime field is set to the value of the last call.
-func (b *EtcdBackupStatusApplyConfiguration) WithStartTime(value v1.Time) *EtcdBackupStatusApplyConfiguration {
-	b.StartTime = &value
-	return b
-}
-
-// WithFinishTime sets the FinishTime field in the declarative configuration to the given value
-// and returns the receiver, so that objects can be built by chaining "With" function invocations.
-// If called multiple times, the FinishTime field is set to the value of the last call.
-func (b *EtcdBackupStatusApplyConfiguration) WithFinishTime(value v1.Time) *EtcdBackupStatusApplyConfiguration {
-	b.FinishTime = &value
+// If called multiple times, the BackupJob field is set to the value of the last call.
+func (b *EtcdBackupStatusApplyConfiguration) WithBackupJob(value *BackupJobReferenceApplyConfiguration) *EtcdBackupStatusApplyConfiguration {
+	b.BackupJob = value
 	return b
 }

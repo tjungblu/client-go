@@ -3087,7 +3087,7 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.config.v1alpha1.BackupSpec
   map:
     fields:
-    - name: etcdBackupSpec
+    - name: etcd
       type:
         namedType: com.github.openshift.api.config.v1alpha1.EtcdBackupSpec
       default: {}
@@ -3173,7 +3173,7 @@ var schemaYAML = typed.YAMLObject(`types:
         elementType:
           namedType: __untyped_deduced_
         elementRelationship: separable
-- name: com.github.openshift.api.config.v1alpha1.RetentionCountConfig
+- name: com.github.openshift.api.config.v1alpha1.RetentionNumberConfig
   map:
     fields:
     - name: maxNumberOfBackups
@@ -3182,9 +3182,9 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.openshift.api.config.v1alpha1.RetentionPolicy
   map:
     fields:
-    - name: retentionCount
+    - name: retentionNumber
       type:
-        namedType: com.github.openshift.api.config.v1alpha1.RetentionCountConfig
+        namedType: com.github.openshift.api.config.v1alpha1.RetentionNumberConfig
     - name: retentionSize
       type:
         namedType: com.github.openshift.api.config.v1alpha1.RetentionSizeConfig
@@ -3195,14 +3195,14 @@ var schemaYAML = typed.YAMLObject(`types:
     unions:
     - discriminator: retentionType
       fields:
-      - fieldName: retentionCount
-        discriminatorValue: RetentionCount
+      - fieldName: retentionNumber
+        discriminatorValue: RetentionNumber
       - fieldName: retentionSize
         discriminatorValue: RetentionSize
 - name: com.github.openshift.api.config.v1alpha1.RetentionSizeConfig
   map:
     fields:
-    - name: maxSizeOfBackupsMb
+    - name: maxSizeOfBackupsGb
       type:
         scalar: numeric
 - name: io.k8s.api.core.v1.ConfigMapKeySelector
