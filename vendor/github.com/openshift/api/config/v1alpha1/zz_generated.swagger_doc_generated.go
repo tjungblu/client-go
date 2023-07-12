@@ -31,9 +31,17 @@ func (BackupList) SwaggerDoc() map[string]string {
 	return map_BackupList
 }
 
+var map_BackupSpec = map[string]string{
+	"etcd": "etcd specifies the configuration for periodic backups of the etcd cluster",
+}
+
+func (BackupSpec) SwaggerDoc() map[string]string {
+	return map_BackupSpec
+}
+
 var map_EtcdBackupSpec = map[string]string{
 	"":                "EtcdBackupSpec provides configuration for automated etcd backups to the cluster-etcd-operator",
-	"schedule":        "Schedule defines the recurring backup schedule in Cron format every 2 hours: 0 */2 * * * every day at 3am: 0 3 * * * Setting to an empty string \"\" means disabling scheduled backups Default: \"\" See if the upstream CronJob has CEL validation already defined somewhere.",
+	"schedule":        "Schedule defines the recurring backup schedule in Cron format every 2 hours: 0 */2 * * * every day at 3am: 0 3 * * * Setting to an empty string \"\" means disabling scheduled backups",
 	"timeZone":        "The time zone name for the given schedule, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones. If not specified, this will default to the time zone of the kube-controller-manager process. See https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones",
 	"retentionPolicy": "RetentionPolicy defines the retention policy for retaining and deleting existing backups.",
 	"pvcName":         "PVCName specifies the name of the PersistentVolumeClaim which binds a PersistentVolume where the etcd backup files would be saved",
@@ -43,20 +51,20 @@ func (EtcdBackupSpec) SwaggerDoc() map[string]string {
 	return map_EtcdBackupSpec
 }
 
-var map_RetentionCountConfig = map[string]string{
-	"":                   "RetentionCountConfig specifies the configuration of the retention policy on the number of backups",
-	"maxNumberOfBackups": "MaxNumberOfBackups defines the maximum number of backups to retain. If the number of successful backups matches retentionCount the oldest backup will be removed before a new backup is initiated. The count here is for the total number of backups",
+var map_RetentionNumberConfig = map[string]string{
+	"":                   "RetentionNumberConfig specifies the configuration of the retention policy on the number of backups",
+	"maxNumberOfBackups": "MaxNumberOfBackups defines the maximum number of backups to retain. If the existing number of backups saved is equal to MaxNumberOfBackups then the oldest backup will be removed before a new backup is initiated.",
 }
 
-func (RetentionCountConfig) SwaggerDoc() map[string]string {
-	return map_RetentionCountConfig
+func (RetentionNumberConfig) SwaggerDoc() map[string]string {
+	return map_RetentionNumberConfig
 }
 
 var map_RetentionPolicy = map[string]string{
-	"":               "RetentionPolicy defines the retention policy for retaining and deleting existing backups. This struct is a discriminated union that allows users to select the type of retention policy from the supported types.",
-	"retentionType":  "RetentionType sets the type of retention policy. The currently supported and valid values are \"retentionCount\" Currently, the only valid policies are retention by count (RetentionCount) and by size (RetentionSize). More policies or types may be added in the future. which would need to be explicitly set as the discriminant or can we set that as the default value.",
-	"retentionCount": "RetentionCount configures the retention policy based on the number of backups",
-	"retentionSize":  "RetentionSize configures the retention policy based on the size of backups",
+	"":                "RetentionPolicy defines the retention policy for retaining and deleting existing backups. This struct is a discriminated union that allows users to select the type of retention policy from the supported types.",
+	"retentionType":   "RetentionType sets the type of retention policy. Currently, the only valid policies are retention by number of backups (RetentionNumber), by the size of backups (RetentionSize). More policies or types may be added in the future. Specifying an empty string \"\" means no retention policy and no backups will be pruned.",
+	"retentionNumber": "RetentionNumber configures the retention policy based on the number of backups",
+	"retentionSize":   "RetentionSize configures the retention policy based on the size of backups",
 }
 
 func (RetentionPolicy) SwaggerDoc() map[string]string {
@@ -65,7 +73,7 @@ func (RetentionPolicy) SwaggerDoc() map[string]string {
 
 var map_RetentionSizeConfig = map[string]string{
 	"":                   "RetentionSizeConfig specifies the configuration of the retention policy on the total size of backups",
-	"maxSizeOfBackupsMb": "MaxSizeOfBackupsMb defines the total size in Mb of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsMb then the oldest backup will be removed before a new backup is initiated.",
+	"maxSizeOfBackupsGb": "MaxSizeOfBackupsGb defines the total size in GB of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsGb then the oldest backup will be removed before a new backup is initiated.",
 }
 
 func (RetentionSizeConfig) SwaggerDoc() map[string]string {

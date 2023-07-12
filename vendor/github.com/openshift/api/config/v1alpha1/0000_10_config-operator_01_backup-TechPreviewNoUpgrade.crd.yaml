@@ -41,10 +41,10 @@ spec:
               description: spec holds user settable values for configuration
               type: object
               required:
-                - etcdBackupSpec
+                - etcd
               properties:
-                etcdBackupSpec:
-                  description: EtcdBackupSpec provides configuration for automated etcd backups to the cluster-etcd-operator
+                etcd:
+                  description: etcd specifies the configuration for periodic backups of the etcd cluster
                   type: object
                   required:
                     - pvcName
@@ -59,42 +59,45 @@ spec:
                       required:
                         - retentionType
                       properties:
-                        retentionCount:
-                          description: RetentionCount configures the retention policy based on the number of backups
+                        retentionNumber:
+                          description: RetentionNumber configures the retention policy based on the number of backups
                           type: object
                           required:
                             - maxNumberOfBackups
                           properties:
                             maxNumberOfBackups:
-                              description: MaxNumberOfBackups defines the maximum number of backups to retain. If the number of successful backups matches retentionCount the oldest backup will be removed before a new backup is initiated. The count here is for the total number of backups
+                              description: MaxNumberOfBackups defines the maximum number of backups to retain. If the existing number of backups saved is equal to MaxNumberOfBackups then the oldest backup will be removed before a new backup is initiated.
                               type: integer
                               minimum: 1
                         retentionSize:
                           description: RetentionSize configures the retention policy based on the size of backups
                           type: object
                           required:
-                            - maxSizeOfBackupsMb
+                            - maxSizeOfBackupsGb
                           properties:
-                            maxSizeOfBackupsMb:
-                              description: MaxSizeOfBackupsMb defines the total size in Mb of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsMb then the oldest backup will be removed before a new backup is initiated.
+                            maxSizeOfBackupsGb:
+                              description: MaxSizeOfBackupsGb defines the total size in GB of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsGb then the oldest backup will be removed before a new backup is initiated.
                               type: integer
-                              minimum: 100
+                              minimum: 1
                         retentionType:
-                          description: 'RetentionType sets the type of retention policy. The currently supported and valid values are "retentionCount" Currently, the only valid policies are retention by count (RetentionCount) and by size (RetentionSize). More policies or types may be added in the future. TODO: How to provide a "NoRetentionPolicy" option as a default? Should that be another enum which would need to be explicitly set as the discriminant or can we set that as the default value.'
+                          description: RetentionType sets the type of retention policy. Currently, the only valid policies are retention by number of backups (RetentionNumber), by the size of backups (RetentionSize). More policies or types may be added in the future. Specifying an empty string "" means no retention policy and no backups will be pruned.
                           type: string
                           allOf:
                             - enum:
-                                - RetentionCount
+                                - RetentionNumber
                                 - RetentionSize
                             - enum:
-                                - RetentionCount
+                                - ""
+                                - RetentionNumber
                                 - RetentionSize
                     schedule:
-                      description: 'Schedule defines the recurring backup schedule in Cron format every 2 hours: 0 */2 * * * every day at 3am: 0 3 * * * Setting to an empty string "" means disabling scheduled backups Default: "" TODO: Define CEL validation for the cron format See if the upstream CronJob has CEL validation already defined somewhere. TODO: Validation to disallow unrealistic schedules (e.g */2 * * * * every 2 mins)'
+                      description: 'Schedule defines the recurring backup schedule in Cron format every 2 hours: 0 */2 * * * every day at 3am: 0 3 * * * Setting to an empty string "" means disabling scheduled backups'
                       type: string
+                      pattern: ^(@(annually|yearly|monthly|weekly|daily|hourly))|(\*|(?:\*|(?:[0-9]|(?:[1-5][0-9])))\/(?:[0-9]|(?:[1-5][0-9]))|(?:[0-9]|(?:[1-5][0-9]))(?:(?:\-[0-9]|\-(?:[1-5][0-9]))?|(?:\,(?:[0-9]|(?:[1-5][0-9])))*)) (\*|(?:\*|(?:\*|(?:[0-9]|1[0-9]|2[0-3])))\/(?:[0-9]|1[0-9]|2[0-3])|(?:[0-9]|1[0-9]|2[0-3])(?:(?:\-(?:[0-9]|1[0-9]|2[0-3]))?|(?:\,(?:[0-9]|1[0-9]|2[0-3]))*)) (\*|(?:[1-9]|(?:[12][0-9])|3[01])(?:(?:\-(?:[1-9]|(?:[12][0-9])|3[01]))?|(?:\,(?:[1-9]|(?:[12][0-9])|3[01]))*)) (\*|(?:[1-9]|1[012]|JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(?:(?:\-(?:[1-9]|1[012]|JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))?|(?:\,(?:[1-9]|1[012]|JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))*)) (\*|(?:[0-6]|SUN|MON|TUE|WED|THU|FRI|SAT)(?:(?:\-(?:[0-6]|SUN|MON|TUE|WED|THU|FRI|SAT))?|(?:\,(?:[0-6]|SUN|MON|TUE|WED|THU|FRI|SAT))*))$
                     timeZone:
-                      description: 'The time zone name for the given schedule, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones. If not specified, this will default to the time zone of the kube-controller-manager process. See https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones TODO: CEL validation for timezone format'
+                      description: The time zone name for the given schedule, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones. If not specified, this will default to the time zone of the kube-controller-manager process. See https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones
                       type: string
+                      pattern: ^([A-Za-z_]+([+-]*0)*|[A-Za-z_]+(\/[A-Za-z_]+){1,2})(\/GMT[+-]\d{1,2})?$
             status:
               description: status holds observed values from the cluster. They may not be overridden.
               type: object

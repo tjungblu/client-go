@@ -54,8 +54,21 @@ spec:
               description: status holds observed values from the cluster. They may not be overridden.
               type: object
               properties:
+                backupJob:
+                  description: backupJob is the reference to the Job that executes the backup. Optional
+                  type: object
+                  required:
+                    - name
+                    - namespace
+                  properties:
+                    name:
+                      description: name is the name of the Job. Required
+                      type: string
+                    namespace:
+                      description: namespace is the namespace of the Job. Required
+                      type: string
                 conditions:
-                  description: conditions provide details on the status of the gatherer job.
+                  description: conditions provide details on the status of the etcd backup job.
                   type: array
                   items:
                     description: "Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, \n type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` \n // other fields }"
@@ -101,43 +114,3 @@ spec:
                   x-kubernetes-list-map-keys:
                     - type
                   x-kubernetes-list-type: map
-                etcdBackupState:
-                  description: etcdBackupState reflects the current state of the etcd backup process.
-                  type: string
-                  enum:
-                    - Running
-                    - Completed
-                    - Failed
-                    - Pending
-                  x-kubernetes-validations:
-                    - rule: '!(oldSelf == ''Running'' && self == ''Pending'')'
-                      message: etcdBackupState cannot transition from Running to Pending
-                    - rule: '!(oldSelf == ''Completed'' && self == ''Pending'')'
-                      message: etcdBackupState cannot transition from Completed to Pending
-                    - rule: '!(oldSelf == ''Failed'' && self == ''Pending'')'
-                      message: etcdBackupState cannot transition from Failed to Pending
-                    - rule: '!(oldSelf == ''Completed'' && self == ''Running'')'
-                      message: etcdBackupState cannot transition from Completed to Running
-                    - rule: '!(oldSelf == ''Failed'' && self == ''Running'')'
-                      message: etcdBackupState cannot transition from Failed to Running
-                finishTime:
-                  description: finishTime is the time when the etcd backup finished.
-                  type: string
-                  format: date-time
-                  x-kubernetes-validations:
-                    - rule: self == oldSelf
-                      message: finishTime is immutable once set
-                startTime:
-                  description: startTime is the time when the etcd backup started.
-                  type: string
-                  format: date-time
-                  x-kubernetes-validations:
-                    - rule: self == oldSelf
-                      message: startTime is immutable once set
-              x-kubernetes-validations:
-                - rule: (!has(oldSelf.startTime) || has(self.startTime))
-                  message: cannot remove startTime attribute from status
-                - rule: (!has(oldSelf.finishTime) || has(self.finishTime))
-                  message: cannot remove finishTime attribute from status
-                - rule: (!has(oldSelf.etcdBackupState) || has(self.etcdBackupState))
-                  message: cannot remove etcdBackupState attribute from status

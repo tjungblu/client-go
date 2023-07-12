@@ -37,33 +37,9 @@ type EtcdBackupSpec struct {
 	PVCName string `json:"pvcName"`
 }
 
-const (
-	// Etcd backup is running
-	Running EtcdBackupState = "Running"
-	// Etcd backup is completed
-	Completed EtcdBackupState = "Completed"
-	// Etcd backup failed
-	Failed EtcdBackupState = "Failed"
-	// Etcd backup is pending
-	Pending EtcdBackupState = "Pending"
-)
-
-// etcdBackupState declares valid gathering state types
-// +kubebuilder:validation:Optional
-// +kubebuilder:validation:Enum=Running;Completed;Failed;Pending
-// +kubebuilder:validation:XValidation:rule="!(oldSelf == 'Running' && self == 'Pending')", message="etcdBackupState cannot transition from Running to Pending"
-// +kubebuilder:validation:XValidation:rule="!(oldSelf == 'Completed' && self == 'Pending')", message="etcdBackupState cannot transition from Completed to Pending"
-// +kubebuilder:validation:XValidation:rule="!(oldSelf == 'Failed' && self == 'Pending')", message="etcdBackupState cannot transition from Failed to Pending"
-// +kubebuilder:validation:XValidation:rule="!(oldSelf == 'Completed' && self == 'Running')", message="etcdBackupState cannot transition from Completed to Running"
-// +kubebuilder:validation:XValidation:rule="!(oldSelf == 'Failed' && self == 'Running')", message="etcdBackupState cannot transition from Failed to Running"
-type EtcdBackupState string
-
-// +kubebuilder:validation:XValidation:rule="(!has(oldSelf.startTime) || has(self.startTime))",message="cannot remove startTime attribute from status"
-// +kubebuilder:validation:XValidation:rule="(!has(oldSelf.finishTime) || has(self.finishTime))",message="cannot remove finishTime attribute from status"
-// +kubebuilder:validation:XValidation:rule="(!has(oldSelf.etcdBackupState) || has(self.etcdBackupState))",message="cannot remove etcdBackupState attribute from status"
 // +kubebuilder:validation:Optional
 type EtcdBackupStatus struct {
-	// conditions provide details on the status of the gatherer job.
+	// conditions provide details on the status of the etcd backup job.
 	// +patchMergeKey=type
 	// +patchStrategy=merge
 	// +listType=map
@@ -71,23 +47,41 @@ type EtcdBackupStatus struct {
 	// +optional
 	Conditions []metav1.Condition `json:"conditions" patchStrategy:"merge" patchMergeKey:"type"`
 
-	// etcdBackupState reflects the current state of the etcd backup process.
+	// backupJob is the reference to the Job that executes the backup.
+	// Optional
 	// +kubebuilder:validation:Optional
-	// +optional
-	State EtcdBackupState `json:"etcdBackupState,omitempty"`
-
-	// startTime is the time when the etcd backup started.
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="startTime is immutable once set"
-	// +optional
-	StartTime metav1.Time `json:"startTime,omitempty"`
-
-	// finishTime is the time when the etcd backup finished.
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="finishTime is immutable once set"
-	// +optional
-	FinishTime metav1.Time `json:"finishTime,omitempty"`
+	BackupJob BackupJobReference `json:"backupJob"`
 }
+
+// BackupJobReference holds a reference to the batch/v1 Job created to run the etcd backup
+type BackupJobReference struct {
+
+	// namespace is the namespace of the Job.
+	// Required
+	// +kubebuilder:validation:Required
+	Namespace string `json:"namespace"`
+
+	// name is the name of the Job.
+	// Required
+	// +kubebuilder:validation:Required
+	Name string `json:"name"`
+}
+
+type BackupConditionReason string
+
+var (
+	// BackupPending is added to the EtcdBackupStatus Conditions when the etcd backup is pending.
+	BackupPending BackupConditionReason = "BackupPending"
+
+	// BackupCompleted is added to the EtcdBackupStatus Conditions when the etcd backup has completed.
+	BackupCompleted BackupConditionReason = "BackupCompleted"
+
+	// BackupFailed is added to the EtcdBackupStatus Conditions when the etcd backup has failed.
+	BackupFailed BackupConditionReason = "BackupFailed"
+
+	// BackupSkipped is added to the EtcdBackupStatus Conditions when the etcd backup has been skipped.
+	BackupSkipped BackupConditionReason = "BackupSkipped"
+)
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
